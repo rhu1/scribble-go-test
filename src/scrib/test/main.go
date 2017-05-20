@@ -49,15 +49,14 @@ func RunA(a1 Proto1.Proto1_A_1) {
 	log.Println("A: start")
 	defer barrier.Done()
 
-	a1.Send_B_Ok(1234)
+	var y int
+	a1.Send_B_Ok(1234).Recv_B_Bye(&y)
+
+	log.Println("A: received from B:", y)
 }
 /*	//defer endA.Close()  // FIXME
 
-
-
 	//NewProto1_A_1(
-
-	//log.Println("A: received from B:", y)
 }
 //*/
 
@@ -68,7 +67,7 @@ func RunB(b1 Proto1.Proto1_B_1) {
 	defer barrier.Done()
 
 	var x int
-	b1.Recv_A_Ok(&x)
+	b1.Recv_A_Ok(&x).Send_A_Bye(x * 2)
 
 	log.Println("B: received from A:", x)
 }
@@ -90,7 +89,5 @@ func RunB(b1 Proto1.Proto1_B_1) {
 				loop = false
 		}
 	}
-
-	log.Println("B: received from A:", x)
 }
 */
