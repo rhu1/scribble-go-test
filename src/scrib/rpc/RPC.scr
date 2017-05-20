@@ -1,5 +1,6 @@
 //Raymond@HZHL3 ~/code/scribble-neon/github-rhu1-go/scribble-go-test
 //$ ../scribble-java/bin/scribblec.sh -ip src -d src src/scrib/rpc/RPC.scr -goapi Proto1 C 
+//$ go install scrib/rpc
 
 
 //http://sandbox.kidstrythisathome.com/erdos/

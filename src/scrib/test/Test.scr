@@ -1,5 +1,6 @@
 //Raymond@HZHL3 ~/code/scribble-neon/github-rhu1-go/scribble-go-test
 //$ ../scribble-java/bin/scribblec.sh -ip src -d src src/scrib/test/Test.scr -goapi Proto1 A 
+//$ go install scrib/test
 
 
 //http://sandbox.kidstrythisathome.com/erdos/
@@ -15,11 +16,11 @@ global protocol Proto1(role A, role B)
 {
 	choice at A
 	{
-		ok(int) from A to B;
+		Ok(int) from A to B;
 		do Proto1(A, B);
 	}
 	or
 	{
-		bye(int) from A to B;
+		Bye(int) from A to B;
 	}
 }

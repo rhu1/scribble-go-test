@@ -42,19 +42,18 @@ func RunA(AB chan Proto1.T) {
 
 	//if true
 	for y = 0; y < 5; y++ {
-		a1 = a1.Send_B_ok(y)
+		a1 = a1.Send_B_Ok(y)
 	} //else
 	{
-		a1.Send_B_bye(y)
+		a1.Send_B_Bye(y)
 	}
 
 	//log.Println("A: received from B:", y)
 }
 
 
-// FIXME: case constants for unary send
-// FIXME: linearity
 // FIXME: message op check (and use underscore version for internal)
+// FIXME: linearity
 
 
 func RunB(BA chan Proto1.T) {
@@ -70,11 +69,11 @@ func RunB(BA chan Proto1.T) {
 	//B.Recv_A_1(&x).Send_A_2(x * 2)
 	for loop {
 		switch cases := b1.Branch_A().(type) {
-			case Proto1.OK_:
-				b1 = cases.Recv_A_ok(&x)
+			case Proto1.Ok:
+				b1 = cases.Recv_A_Ok(&x)
 				log.Println("B: received from A:", x)
-			case Proto1.BYE_:
-				cases.Recv_A_bye(&x)
+			case Proto1.Bye:
+				cases.Recv_A_Bye(&x)
 				loop = false
 		}
 	}
