@@ -1,0 +1,6 @@
+package mygopack;
+
+
+func MyFunc() {
+	
+}

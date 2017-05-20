@@ -2,7 +2,7 @@ package main;
 
 
 import "fmt"
-import "scrib/foo/mygopack"
+//import "scrib/foo/mygopack"
 	
 
 type TT interface{}
@@ -12,7 +12,7 @@ type Bar struct{}
 
 
 func main() {
-	mygopack.MyFunc()
+	//mygopack.MyFunc()
 
 	f := Foo{}
 	b := Bar{}
