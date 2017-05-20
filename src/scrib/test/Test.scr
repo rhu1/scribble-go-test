@@ -14,13 +14,5 @@ type <go> "int" from "..." as int;
 
 global protocol Proto1(role A, role B)
 {
-	choice at A
-	{
-		Ok(int) from A to B;
-		do Proto1(A, B);
-	}
-	or
-	{
-		Bye(int) from A to B;
-	}
+	Ok(int) from A to B;
 }

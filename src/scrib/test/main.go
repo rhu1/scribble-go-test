@@ -9,6 +9,8 @@ import (
 	"log"
 	"sync"
 
+	"org/scribble/runtime/net"	
+
 	"scrib/test/Test/Proto1"	
 )
 
@@ -22,44 +24,55 @@ func main() {
 	log.Println("chan transport")
 	barrier.Add(2)
 
-	AB := make(chan Proto1.T)	
+	c := net.NewGoBinChan(make(chan net.T))
+	P := *Proto1.NewProto1()
 
-	go RunA(AB)
-	go RunB(AB)
+	epA := net.NewMPSTEndpoint(P, P.A)  // FIXME: generate role-specific EP types (no parameterised types)
+	epA.Connect(P.B, c)
+	a1 := *Proto1.NewProto1_A_1(epA)
+	go RunA(a1)
+
+	epB := net.NewMPSTEndpoint(P, P.B)
+	epB.Accept(P.A, c)
+	b1 := *Proto1.NewProto1_B_1(epB)
+	go RunB(b1)
 
 	barrier.Wait()
 }
 
-func RunA(AB chan Proto1.T) {
+
+// FIXME: some internal value passing (e.g., roles?) needs to be changed to pointers
+
+
+//*
+func RunA(a1 Proto1.Proto1_A_1) {
 	log.Println("A: start")
 	defer barrier.Done()
 
-	a1, endA := Proto1.NewA(AB)
-	defer endA.Close()
+	a1.Send_B_Ok(1234)
+}
+/*	//defer endA.Close()  // FIXME
 
-	var y int
-	//A.Send_B_1(1234).Recv_B_2(&y)
 
-	//if true
-	for y = 0; y < 5; y++ {
-		a1 = a1.Send_B_Ok(y)
-	} //else
-	{
-		a1.Send_B_Bye(y)
-	}
+
+	//NewProto1_A_1(
 
 	//log.Println("A: received from B:", y)
 }
+//*/
 
 
-// FIXME: message op check (and use underscore version for internal)
-// FIXME: linearity
-
-
-func RunB(BA chan Proto1.T) {
+//*/
+func RunB(b1 Proto1.Proto1_B_1) {
 	log.Println("B: start")
 	defer barrier.Done()
 
+	var x int
+	b1.Recv_A_Ok(&x)
+
+	log.Println("B: received from A:", x)
+}
+/*
 	b1, endB := Proto1.NewB(BA)
 	defer endB.Close()
 
@@ -80,3 +93,4 @@ func RunB(BA chan Proto1.T) {
 
 	log.Println("B: received from A:", x)
 }
+*/
