@@ -25,7 +25,7 @@ func main() {
 	barrier.Add(2)
 
 	c := net.NewGoBinChan(make(chan net.T))
-	P := Proto1.NewProto1()  // FIXME: pointer mess
+	P := Proto1.NewProto1()
 
 	epA := net.NewMPSTEndpoint(P, P.A)  // FIXME: generate role-specific EP types (no parameterised types)
 	go RunA(P, c, epA)
@@ -40,9 +40,6 @@ func main() {
 // FIXME: errors
 // FIXME: some internal value passing (e.g., roles?) needs to be changed to pointers -- pointer mess in general -- OTOH roles as types may not be useful (cf., ops)
 			// Or make roles by a proper singleton pattern (via checked constructor functions) -- and use them for type-safe generated Endpoint classes
-// FIXME: proto/role name format checks?
-// FIXME: private state chan constructors while keeping types public
-// FIXME: EndSocket privacy, and not linearresource
 
 
 //*

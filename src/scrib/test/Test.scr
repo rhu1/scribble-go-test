@@ -24,3 +24,24 @@ global protocol Proto1(role A, role B)
 		Bye(int) from A to B;
 	}
 }
+
+
+global protocol Proto2(role A, role B)
+{
+	choice at A
+	{
+		Ok() from A to B;
+	}
+	or
+	{
+		Bye() from A to B;
+	}
+	choice at A
+	{
+		Ok() from A to B;
+	}
+	or
+	{
+		Bye() from A to B;
+	}
+}

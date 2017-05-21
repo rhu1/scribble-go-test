@@ -9,23 +9,6 @@ type LinearResource struct {
 }
 
 
-/*type __Foo struct {	
-
-}
-
-func (b *__Foo) Foo1() {
-}
-
-
-type Bar struct {
-
-}
-
-func (b *Bar) Bar1() __Foo {
-	return __Foo{}	
-}*/
-
-
 func (cs *LinearResource) Use() {
 	if cs.used {
 		panic("Linear resource already used.")  // FIXME: panic seems non-deterministic?
