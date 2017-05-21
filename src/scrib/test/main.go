@@ -25,17 +25,13 @@ func main() {
 	barrier.Add(2)
 
 	c := net.NewGoBinChan(make(chan net.T))
-	P := *Proto1.NewProto1()
+	P := *Proto1.NewProto1()  // FIXME: pointer mess
 
 	epA := net.NewMPSTEndpoint(P, P.A)  // FIXME: generate role-specific EP types (no parameterised types)
-	epA.Connect(P.B, c)
-	a1 := *Proto1.NewProto1_A_1(epA)
-	go RunA(a1)
+	go RunA(P, c, epA)
 
 	epB := net.NewMPSTEndpoint(P, P.B)
-	epB.Accept(P.A, c)
-	b1 := *Proto1.NewProto1_B_1(epB)
-	go RunB(b1)
+	go RunB(P, c, epB)
 
 	barrier.Wait()
 }
@@ -45,12 +41,17 @@ func main() {
 
 
 //*
-func RunA(a1 Proto1.Proto1_A_1) {
+func RunA(P Proto1.Proto1, c *net.GoBinChan, epA *net.MPSTEndpoint) {
 	log.Println("A: start")
 	defer barrier.Done()
 
+	defer epA.Close()
+	epA.Connect(P.B, c)
+	a1 := Proto1.NewProto1_A_1(epA)
+
 	var y int
-	a1.Send_B_Ok(1234).Recv_B_Bye(&y)
+	a1.Send_B_Ok(1234)//.Recv_B_Bye(&y)
+	//a1.Send_B_Ok(1234)  // FIXME: panic seems non-deterministic...
 
 	log.Println("A: received from B:", y)
 }
@@ -62,12 +63,16 @@ func RunA(a1 Proto1.Proto1_A_1) {
 
 
 //*/
-func RunB(b1 Proto1.Proto1_B_1) {
+func RunB(P Proto1.Proto1, c *net.GoBinChan, epB *net.MPSTEndpoint) {
 	log.Println("B: start")
 	defer barrier.Done()
 
+	defer epB.Close()
+	epB.Accept(P.A, c)
+	b1 := Proto1.NewProto1_B_1(epB)
+
 	var x int
-	b1.Recv_A_Ok(&x).Send_A_Bye(x * 2)
+	b1.Recv_A_Ok(&x)//.Send_A_Bye(x * 2)
 
 	log.Println("B: received from A:", x)
 }

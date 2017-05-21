@@ -1,6 +1,9 @@
 package net;
 
 
+import "strings"
+
+
 type LinearResource struct {
 	used bool
 }
@@ -8,14 +11,14 @@ type LinearResource struct {
 
 func (cs *LinearResource) Use() {
 	if cs.used {
-		panic("already done")
+		panic("Linear resource already used.")  // FIXME: panic seems non-deterministic?
 	}
 	cs.used = true;
 }
 
 
 type Role interface {
-	IsRole() bool
+	GetRoleName() string
 }
 
 
@@ -35,6 +38,19 @@ type MPSTEndpoint struct {
 	Proto P
 	Self Role
 	Chans map[Role]BinChan
+	Done bool
+}
+
+func (ep *MPSTEndpoint) Close() error {  // FIXME: should be pointer receiver?
+	for r, c := range ep.Chans {
+		if strings.Compare(ep.Self.GetRoleName(), r.GetRoleName()) < 1 {  // errors?
+			c.Close()
+		}
+	}
+	if !ep.Done {
+		panic("MPSTEndpoint incomplete")  // FIXME: integrate better with LinearResource -- MPSTEndpoint should be a "LinResManager", that tracks LinRes's within its scope  // FIXME:  EndSocket special case (not LinRes)
+	}
+	return nil  // FIXME: ?
 }
 
 func NewMPSTEndpoint(proto P, self Role) *MPSTEndpoint {
