@@ -43,7 +43,7 @@ type MPSTEndpoint struct {
 
 func (ep *MPSTEndpoint) Close() error {  // FIXME: should be pointer receiver?
 	for r, c := range ep.Chans {
-		if strings.Compare(ep.Self.GetRoleName(), r.GetRoleName()) < 1 {  // errors?
+		if strings.Compare(ep.Self.GetRoleName(), r.GetRoleName()) < 1 {  // errors?  // FIXME: this hack should only be GoBinChan
 			c.Close()
 		}
 	}

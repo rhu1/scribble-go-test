@@ -1,0 +1,26 @@
+//Raymond@HZHL3 ~/code/scribble-neon/github-rhu1-go/scribble-go-test
+//$ ../scribble-java/bin/scribblec.sh -ip src -d src src/scrib/hello/Hello.scr -goapi Proto1 A 
+//$ go install scrib/hello
+
+
+//http://sandbox.kidstrythisathome.com/erdos/
+
+
+module scrib.hello.Hello;  // Use scrib prefix to separate from general go packages
+
+
+type <go> "int" from "..." as int;
+
+
+global protocol Proto1(role A, role B)
+{
+	choice at A
+	{
+		Ok(int) from A to B;
+		do Proto1(A, B);
+	}
+	or
+	{
+		Bye(int) from A to B;
+	}
+}

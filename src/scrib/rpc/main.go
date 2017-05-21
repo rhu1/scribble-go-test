@@ -9,6 +9,8 @@ import (
 	"log"
 	"sync"
 
+	"org/scribble/runtime/net"	
+
 	"scrib/rpc/RPC/Proto1"	
 )
 
@@ -22,42 +24,42 @@ func main() {
 	//log.Println("chan transport")
 	barrier.Add(2)
 
-	AB := make(chan Proto1.T)	
+	c := net.NewGoBinChan(make(chan net.T))
+	P := *Proto1.NewProto1()
 
-	go RunA(AB)
-	go RunB(AB)
+	epC := net.NewMPSTEndpoint(P, P.C)
+	go RunC(P, c, epC)
+
+	epS := net.NewMPSTEndpoint(P, P.S)
+	go RunS(P, c, epS)
 
 	barrier.Wait()
 }
 
-func RunA(AB chan Proto1.T) {
+func RunC(P Proto1.Proto1, c *net.GoBinChan, epC *net.MPSTEndpoint) {
 	log.Println("(C) start")
 	defer barrier.Done()
 
-	a1, endA := Proto1.NewC(AB)
-	defer endA.Close()
+	defer epC.Close()
+	epC.Connect(P.S, c)
+	c1 := Proto1.NewProto1_C_1(epC)
 
 	var y string
-	a1.Send_S_req("ABCD").Recv_S_resp(&y)
+	c1.Send_S_req("ABCD").Recv_S_resp(&y)
 
 	log.Println("(C) received from S:", y)
 }
 
-
-// FIXME: case constants for unary send
-// FIXME: linearity
-// FIXME: message op check (and use underscore version for internal)
-
-
-func RunB(BA chan Proto1.T) {
+func RunS(P Proto1.Proto1, c *net.GoBinChan, epS *net.MPSTEndpoint) {
 	log.Println("(S) start")
 	defer barrier.Done()
 
-	b1, endB := Proto1.NewS(BA)
-	defer endB.Close()
+	defer epS.Close()
+	epS.Accept(P.C, c)
+	s1 := Proto1.NewProto1_S_1(epS)
 
 	var x string
-	b1.Recv_C_req(&x).Send_C_resp(x + x)
+	s1.Recv_C_req(&x).Send_C_resp(x + x)
 
 	log.Println("(S) received from C:", x)
 }

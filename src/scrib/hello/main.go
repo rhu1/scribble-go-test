@@ -11,7 +11,7 @@ import (
 
 	"org/scribble/runtime/net"	
 
-	"scrib/test/Test/Proto1"	
+	"scrib/hello/Hello/Proto1"	
 )
 
 
@@ -25,9 +25,9 @@ func main() {
 	barrier.Add(2)
 
 	c := net.NewGoBinChan(make(chan net.T))
-	P := *Proto1.NewProto1()  // FIXME: pointer mess
+	P := *Proto1.NewProto1()
 
-	epA := net.NewMPSTEndpoint(P, P.A)  // FIXME: generate role-specific EP types (no parameterised types)
+	epA := net.NewMPSTEndpoint(P, P.A)
 	go RunA(P, c, epA)
 
 	epB := net.NewMPSTEndpoint(P, P.B)
@@ -37,12 +37,6 @@ func main() {
 }
 
 
-// FIXME: some internal value passing (e.g., roles?) needs to be changed to pointers -- pointer mess in general -- OTOH roles as types may not be useful (cf., ops)
-			// Or make roles by a proper singleton pattern (via checked constructor functions) -- and use them for type-safe generated Endpoint classes
-// FIXME: label constants need to be separated
-
-
-//*
 func RunA(P Proto1.Proto1, c *net.GoBinChan, epA *net.MPSTEndpoint) {
 	log.Println("A: start")
 	defer barrier.Done()
@@ -52,14 +46,16 @@ func RunA(P Proto1.Proto1, c *net.GoBinChan, epA *net.MPSTEndpoint) {
 	a1 := Proto1.NewProto1_A_1(epA)
 
 	var y int
-	a1.Send_B_Ok(1234)//.Recv_B_Bye(&y)
-	//a1.Send_B_Ok(1234)  // FIXME: panic seems non-deterministic...
 
-	log.Println("A: received from B:", y)
+	for y = 0; y < 5; y++ {
+		a1 = a1.Send_B_Ok(y)
+	}
+	a1.Send_B_Bye(y)
+
+	//log.Println("A: received from B:", y)
 }
 
 
-//*/
 func RunB(P Proto1.Proto1, c *net.GoBinChan, epB *net.MPSTEndpoint) {
 	log.Println("B: start")
 	defer barrier.Done()
@@ -68,17 +64,19 @@ func RunB(P Proto1.Proto1, c *net.GoBinChan, epB *net.MPSTEndpoint) {
 	epB.Accept(P.A, c)
 	b1 := Proto1.NewProto1_B_1(epB)
 
+	var loop = true
 	var x int
-	//b1.Recv_A_Ok(&x)//.Send_A_Bye(x * 2)
-	
-	switch cases := b1.Branch_A().(type) {
-		case Proto1.Ok:	
-			cases.Recv_A_Ok(&x)
-			log.Println("B: received from A:", x)
-		case Proto1.Bye:	
-			cases.Recv_A_Bye(&x)
+
+	for loop {
+		switch cases := b1.Branch_A().(type) {
+			case Proto1.Ok:
+				b1 = cases.Recv_A_Ok(&x)
+				log.Println("B: received from A:", x)
+			case Proto1.Bye:
+				cases.Recv_A_Bye(&x)
+				loop = false
+		}
 	}
 
 	log.Println("B: received from A:", x)
 }
-//*/
