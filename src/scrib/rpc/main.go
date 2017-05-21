@@ -15,34 +15,28 @@ import (
 )
 
 
-var (
-	barrier = new(sync.WaitGroup)
-)
-
-
 func main() {
-	//log.Println("chan transport")
+	barrier := new(sync.WaitGroup)
 	barrier.Add(2)
 
 	c := net.NewGoBinChan(make(chan net.T))
 	P := Proto1.NewProto1()
 
-	epC := net.NewMPSTEndpoint(P, P.C)
-	go RunC(P, c, epC)
-
-	epS := net.NewMPSTEndpoint(P, P.S)
-	go RunS(P, c, epS)
+	go RunC(barrier, P, c)
+	go RunS(barrier, P, c)
 
 	barrier.Wait()
 }
 
-func RunC(P *Proto1.Proto1, c net.BinChan, epC *net.MPSTEndpoint) {
+func RunC(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
 	log.Println("(C) start")
 	defer barrier.Done()
 
-	defer epC.Close()
-	epC.Connect(P.S, c)
-	c1 := Proto1.NewProto1_C_1(epC)
+	ep := Proto1.NewEndpointProto1_C(P)
+	ep.C.Connect(P.S, c)	
+	defer ep.C.Close()
+
+	c1 := Proto1.NewProto1_C_1(ep)
 
 	var y string
 	c1.Send_S_req("ABCD").Recv_S_resp(&y)
@@ -50,13 +44,15 @@ func RunC(P *Proto1.Proto1, c net.BinChan, epC *net.MPSTEndpoint) {
 	log.Println("(C) received from S:", y)
 }
 
-func RunS(P *Proto1.Proto1, c net.BinChan, epS *net.MPSTEndpoint) {
+func RunS(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
 	log.Println("(S) start")
 	defer barrier.Done()
 
-	defer epS.Close()
-	epS.Accept(P.C, c)
-	s1 := Proto1.NewProto1_S_1(epS)
+	ep := Proto1.NewEndpointProto1_S(P)
+	ep.S.Accept(P.C, c)	
+	defer ep.S.Close()
+
+	s1 := Proto1.NewProto1_S_1(ep)
 
 	var x string
 	s1.Recv_C_req(&x).Send_C_resp(x + x)

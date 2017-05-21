@@ -38,7 +38,15 @@ type MPSTEndpoint struct {
 	Proto P
 	Self Role
 	Chans map[Role]BinChan
-	Done bool
+	done bool
+}
+
+func (ep *MPSTEndpoint) GetChan(role Role) BinChan {
+	return ep.Chans[role]
+}
+
+func (ep *MPSTEndpoint) SetDone() {
+	ep.done = true
 }
 
 func (ep *MPSTEndpoint) Close() error {  // FIXME: should be pointer receiver?
@@ -47,7 +55,7 @@ func (ep *MPSTEndpoint) Close() error {  // FIXME: should be pointer receiver?
 			c.Close()
 		}
 	}
-	if !ep.Done {
+	if !ep.done {
 		panic("MPSTEndpoint incomplete")  // FIXME: integrate better with LinearResource -- MPSTEndpoint should be a "LinResManager", that tracks LinRes's within its scope  // FIXME:  EndSocket special case (not LinRes)
 	}
 	return nil  // FIXME: ?

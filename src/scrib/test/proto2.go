@@ -22,23 +22,22 @@ func RunProto2() {
 	P := Proto2.NewProto2()
 	c := net.NewGoBinChan(make(chan net.T))
 
-	epA := net.NewMPSTEndpoint(P, P.A)
-	go runProto2A(barrier, P, c, epA)
-
-	epB := net.NewMPSTEndpoint(P, P.B)
-	go runProto2B(barrier, P, c, epB)
+	go runProto2A(barrier, P, c)
+	go runProto2B(barrier, P, c)
 
 	barrier.Wait()
 }
 
 
-func runProto2A(barrier *sync.WaitGroup, P *Proto2.Proto2, c net.BinChan, epA *net.MPSTEndpoint) {
+func runProto2A(barrier *sync.WaitGroup, P *Proto2.Proto2, c net.BinChan) {
 	log.Println("(A) start")
 	defer barrier.Done()
 
-	defer epA.Close()
-	epA.Connect(P.B, c)
-	a2 := Proto2.NewProto2_A_1(epA)
+	ep := Proto2.NewEndpointProto2_A(P)
+	ep.A.Connect(P.B, c)	
+	defer ep.A.Close()
+
+	a2 := Proto2.NewProto2_A_1(ep)
 
 	a2.Send_B_Ok().Send_B_Bye()
 
@@ -46,13 +45,15 @@ func runProto2A(barrier *sync.WaitGroup, P *Proto2.Proto2, c net.BinChan, epA *n
 }
 
 
-func runProto2B(barrier *sync.WaitGroup, P *Proto2.Proto2, c net.BinChan, epB *net.MPSTEndpoint) {
+func runProto2B(barrier *sync.WaitGroup, P *Proto2.Proto2, c net.BinChan) {
 	log.Println("(B) start")
 	defer barrier.Done()
 
-	defer epB.Close()
-	epB.Accept(P.A, c)
-	b1 := Proto2.NewProto2_B_1(epB)
+	ep := Proto2.NewEndpointProto2_B(P)
+	ep.B.Accept(P.A, c)	
+	defer ep.B.Close()
+
+	b1 := Proto2.NewProto2_B_1(ep)
 
 	var b2 *Proto2.Proto2_B_2
 	switch cases := b1.Branch_A().(type) {

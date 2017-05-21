@@ -15,34 +15,29 @@ import (
 )
 
 
-var (
-	barrier = new(sync.WaitGroup)
-)
-
-
 func main() {
+	barrier := new(sync.WaitGroup)
 	barrier.Add(2)
 
 	c := net.NewGoBinChan(make(chan net.T))
 	P := Proto1.NewProto1()
 
-	epA := net.NewMPSTEndpoint(P, P.A)
-	go RunA(P, c, epA)
-
-	epB := net.NewMPSTEndpoint(P, P.B)
-	go RunB(P, c, epB)
+	go RunA(barrier, P, c)
+	go RunB(barrier, P, c)
 
 	barrier.Wait()
 }
 
 
-func RunA(P *Proto1.Proto1, c net.BinChan, epA *net.MPSTEndpoint) {
+func RunA(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
 	log.Println("(A) start")
 	defer barrier.Done()
 
-	defer epA.Close()
-	epA.Connect(P.B, c)
-	a1 := Proto1.NewProto1_A_1(epA)
+	ep := Proto1.NewEndpointProto1_A(P)
+	ep.A.Connect(P.B, c)	
+	defer ep.A.Close()
+
+	a1 := Proto1.NewProto1_A_1(ep)
 
 	var y int
 
@@ -55,13 +50,15 @@ func RunA(P *Proto1.Proto1, c net.BinChan, epA *net.MPSTEndpoint) {
 }
 
 
-func RunB(P *Proto1.Proto1, c net.BinChan, epB *net.MPSTEndpoint) {
+func RunB(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
 	log.Println("(B) start")
 	defer barrier.Done()
 
-	defer epB.Close()
-	epB.Accept(P.A, c)
-	var b1 *Proto1.Proto1_B_1 = Proto1.NewProto1_B_1(epB)
+	ep := Proto1.NewEndpointProto1_B(P)
+	ep.B.Accept(P.A, c)	
+	defer ep.B.Close()
+
+	b1 := Proto1.NewProto1_B_1(ep)
 
 	var loop = true
 	var x int
