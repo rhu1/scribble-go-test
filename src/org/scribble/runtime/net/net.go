@@ -104,6 +104,9 @@ func (ep *MPSTEndpoint) checkConnectionAction(role Role) {
 	if ep.init {
 		panic("Illegal accept after initial state channel has been created.")	
 	}
+	if ep.Chans[role] != nil {
+		panic("Illegal duplicate connection with: " + role.GetRoleName())
+	}
 	if role.GetRoleName() == ep.Self.GetRoleName() {
 		panic("Illegal self-connection: " + ep.Self.GetRoleName())
 	}
