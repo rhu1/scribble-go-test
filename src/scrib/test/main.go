@@ -37,7 +37,8 @@ func main() {
 }
 
 
-// FIXME: some internal value passing (e.g., roles?) needs to be changed to pointers
+// FIXME: some internal value passing (e.g., roles?) needs to be changed to pointers -- pointer mess in general
+// FIXME: label constants need to be separated
 
 
 //*
@@ -72,7 +73,15 @@ func RunB(P Proto1.Proto1, c *net.GoBinChan, epB *net.MPSTEndpoint) {
 	b1 := Proto1.NewProto1_B_1(epB)
 
 	var x int
-	b1.Recv_A_Ok(&x)//.Send_A_Bye(x * 2)
+	//b1.Recv_A_Ok(&x)//.Send_A_Bye(x * 2)
+	
+	switch cases := b1.Branch_A().(type) {
+		case Proto1.Ok:	
+			cases.Recv_A_Ok(&x)
+			log.Println("B: received from A:", x)
+		case Proto1.Bye:	
+			cases.Recv_A_Bye(&x)
+	}
 
 	log.Println("B: received from A:", x)
 }
