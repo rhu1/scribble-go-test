@@ -25,12 +25,12 @@ func main() {
 	barrier.Add(2)
 
 	c := net.NewGoBinChan(make(chan net.T))
-	P := *Proto1.NewProto1()  // FIXME: pointer mess
+	P := Proto1.NewProto1()  // FIXME: pointer mess
 
-	epA := net.NewMPSTEndpoint(P, P.A)  // FIXME: generate role-specific EP types (no parameterised types)
+	epA := net.NewMPSTEndpoint(*P, P.A)  // FIXME: generate role-specific EP types (no parameterised types)
 	go RunA(P, c, epA)
 
-	epB := net.NewMPSTEndpoint(P, P.B)
+	epB := net.NewMPSTEndpoint(*P, P.B)
 	go RunB(P, c, epB)
 
 	barrier.Wait()
@@ -43,7 +43,7 @@ func main() {
 
 
 //*
-func RunA(P Proto1.Proto1, c *net.GoBinChan, epA *net.MPSTEndpoint) {
+func RunA(P *Proto1.Proto1, c *net.GoBinChan, epA *net.MPSTEndpoint) {
 	log.Println("A: start")
 	defer barrier.Done()
 
@@ -60,7 +60,7 @@ func RunA(P Proto1.Proto1, c *net.GoBinChan, epA *net.MPSTEndpoint) {
 
 
 //*/
-func RunB(P Proto1.Proto1, c *net.GoBinChan, epB *net.MPSTEndpoint) {
+func RunB(P *Proto1.Proto1, c *net.GoBinChan, epB *net.MPSTEndpoint) {
 	log.Println("B: start")
 	defer barrier.Done()
 
