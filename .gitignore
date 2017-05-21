@@ -4,4 +4,5 @@ bin/
 pkg/
 src/scrib/rpc/RPC/
 src/scrib/test/Test/
+src/scrib/hello/Hello/
    
