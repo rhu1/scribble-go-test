@@ -44,7 +44,7 @@ func main() {
 
 //*
 func RunA(P *Proto1.Proto1, c *net.GoBinChan, epA *net.MPSTEndpoint) {
-	log.Println("A: start")
+	log.Println("(A) start")
 	defer barrier.Done()
 
 	defer epA.Close()
@@ -55,13 +55,13 @@ func RunA(P *Proto1.Proto1, c *net.GoBinChan, epA *net.MPSTEndpoint) {
 	a1.Send_B_Ok(1234)//.Recv_B_Bye(&y)
 	//a1.Send_B_Ok(1234)  // FIXME: panic seems non-deterministic...
 
-	log.Println("A: received from B:", y)
+	log.Println("(A) received from B:", y)
 }
 
 
 //*/
 func RunB(P *Proto1.Proto1, c *net.GoBinChan, epB *net.MPSTEndpoint) {
-	log.Println("B: start")
+	log.Println("(B) start")
 	defer barrier.Done()
 
 	defer epB.Close()
@@ -74,13 +74,13 @@ func RunB(P *Proto1.Proto1, c *net.GoBinChan, epB *net.MPSTEndpoint) {
 	switch cases := b1.Branch_A().(type) {
 		case *Proto1.Ok:	
 			cases.Recv_A_Ok(&x)
-			log.Println("B: received from A:", x)
+			log.Println("(B) received from A:", x)
 		case *Proto1.Bye:	
 			cases.Recv_A_Bye(&x)
 		default:
 			panic("Shouldn't get in here: ")
 	}
 
-	log.Println("B: received from A:", x)
+	log.Println("(B) received from A:", x)
 }
 //*/

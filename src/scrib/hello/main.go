@@ -21,7 +21,6 @@ var (
 
 
 func main() {
-	log.Println("chan transport")
 	barrier.Add(2)
 
 	c := net.NewGoBinChan(make(chan net.T))
@@ -38,7 +37,7 @@ func main() {
 
 
 func RunA(P *Proto1.Proto1, c *net.GoBinChan, epA *net.MPSTEndpoint) {
-	log.Println("A: start")
+	log.Println("(A) start")
 	defer barrier.Done()
 
 	defer epA.Close()
@@ -57,7 +56,7 @@ func RunA(P *Proto1.Proto1, c *net.GoBinChan, epA *net.MPSTEndpoint) {
 
 
 func RunB(P *Proto1.Proto1, c *net.GoBinChan, epB *net.MPSTEndpoint) {
-	log.Println("B: start")
+	log.Println("(B) start")
 	defer barrier.Done()
 
 	defer epB.Close()
