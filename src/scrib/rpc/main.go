@@ -27,16 +27,16 @@ func main() {
 	c := net.NewGoBinChan(make(chan net.T))
 	P := Proto1.NewProto1()
 
-	epC := net.NewMPSTEndpoint(*P, P.C)
+	epC := net.NewMPSTEndpoint(P, P.C)
 	go RunC(P, c, epC)
 
-	epS := net.NewMPSTEndpoint(*P, P.S)
+	epS := net.NewMPSTEndpoint(P, P.S)
 	go RunS(P, c, epS)
 
 	barrier.Wait()
 }
 
-func RunC(P *Proto1.Proto1, c *net.GoBinChan, epC *net.MPSTEndpoint) {
+func RunC(P *Proto1.Proto1, c net.BinChan, epC *net.MPSTEndpoint) {
 	log.Println("(C) start")
 	defer barrier.Done()
 
@@ -50,7 +50,7 @@ func RunC(P *Proto1.Proto1, c *net.GoBinChan, epC *net.MPSTEndpoint) {
 	log.Println("(C) received from S:", y)
 }
 
-func RunS(P *Proto1.Proto1, c *net.GoBinChan, epS *net.MPSTEndpoint) {
+func RunS(P *Proto1.Proto1, c net.BinChan, epS *net.MPSTEndpoint) {
 	log.Println("(S) start")
 	defer barrier.Done()
 

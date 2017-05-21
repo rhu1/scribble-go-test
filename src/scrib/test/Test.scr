@@ -17,6 +17,7 @@ global protocol Proto1(role A, role B)
 	choice at A
 	{
 		Ok(int) from A to B;
+		PPP() from B to A;
 	}
 	or
 	{

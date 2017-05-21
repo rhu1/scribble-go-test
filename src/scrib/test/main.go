@@ -27,23 +27,26 @@ func main() {
 	c := net.NewGoBinChan(make(chan net.T))
 	P := Proto1.NewProto1()  // FIXME: pointer mess
 
-	epA := net.NewMPSTEndpoint(*P, P.A)  // FIXME: generate role-specific EP types (no parameterised types)
+	epA := net.NewMPSTEndpoint(P, P.A)  // FIXME: generate role-specific EP types (no parameterised types)
 	go RunA(P, c, epA)
 
-	epB := net.NewMPSTEndpoint(*P, P.B)
+	epB := net.NewMPSTEndpoint(P, P.B)
 	go RunB(P, c, epB)
 
 	barrier.Wait()
 }
 
+
 // FIXME: errors
 // FIXME: some internal value passing (e.g., roles?) needs to be changed to pointers -- pointer mess in general -- OTOH roles as types may not be useful (cf., ops)
 			// Or make roles by a proper singleton pattern (via checked constructor functions) -- and use them for type-safe generated Endpoint classes
-// FIXME: label constants need to be separated
+// FIXME: proto/role name format checks?
+// FIXME: private state chan constructors while keeping types public
+// FIXME: EndSocket privacy, and not linearresource
 
 
 //*
-func RunA(P *Proto1.Proto1, c *net.GoBinChan, epA *net.MPSTEndpoint) {
+func RunA(P *Proto1.Proto1, c net.BinChan, epA *net.MPSTEndpoint) {
 	log.Println("(A) start")
 	defer barrier.Done()
 
@@ -51,8 +54,12 @@ func RunA(P *Proto1.Proto1, c *net.GoBinChan, epA *net.MPSTEndpoint) {
 	epA.Connect(P.B, c)
 	a1 := Proto1.NewProto1_A_1(epA)
 
+	/*b := net.Bar{}
+	f := b.Bar1()
+	log.Println(f)*/
+
 	var y int
-	a1.Send_B_Ok(1234)//.Recv_B_Bye(&y)
+	a1.Send_B_Ok(1234).Recv_B_PPP()
 	//a1.Send_B_Ok(1234)  // FIXME: panic seems non-deterministic...
 
 	log.Println("(A) received from B:", y)
@@ -60,7 +67,7 @@ func RunA(P *Proto1.Proto1, c *net.GoBinChan, epA *net.MPSTEndpoint) {
 
 
 //*/
-func RunB(P *Proto1.Proto1, c *net.GoBinChan, epB *net.MPSTEndpoint) {
+func RunB(P *Proto1.Proto1, c net.BinChan, epB *net.MPSTEndpoint) {
 	log.Println("(B) start")
 	defer barrier.Done()
 
@@ -73,14 +80,13 @@ func RunB(P *Proto1.Proto1, c *net.GoBinChan, epB *net.MPSTEndpoint) {
 	
 	switch cases := b1.Branch_A().(type) {
 		case *Proto1.Ok:	
-			cases.Recv_A_Ok(&x)
-			log.Println("(B) received from A:", x)
+			cases.Recv_A_Ok(&x).Send_A_PPP()
+			log.Println("(B) received Ok from A:", x)
 		case *Proto1.Bye:	
 			cases.Recv_A_Bye(&x)
+			log.Println("(B) received Bye from A:", x)
 		default:
 			panic("Shouldn't get in here: ")
 	}
-
-	log.Println("(B) received from A:", x)
 }
 //*/

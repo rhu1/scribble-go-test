@@ -9,6 +9,23 @@ type LinearResource struct {
 }
 
 
+/*type __Foo struct {	
+
+}
+
+func (b *__Foo) Foo1() {
+}
+
+
+type Bar struct {
+
+}
+
+func (b *Bar) Bar1() __Foo {
+	return __Foo{}	
+}*/
+
+
 func (cs *LinearResource) Use() {
 	if cs.used {
 		panic("Linear resource already used.")  // FIXME: panic seems non-deterministic?
@@ -58,7 +75,7 @@ func NewMPSTEndpoint(proto P, self Role) *MPSTEndpoint {
 }
 
 func (ep *MPSTEndpoint) Connect(role Role, c BinChan) {   // FIXME: proper client/server connect/accept operations
-	ep.Chans[role] = c
+	ep.Chans[role] = c  // FIXME: interface types will auto deref the pointer values?
 }
 
 func (ep *MPSTEndpoint) Accept(role Role, c BinChan) {

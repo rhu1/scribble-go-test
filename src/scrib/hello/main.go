@@ -26,17 +26,17 @@ func main() {
 	c := net.NewGoBinChan(make(chan net.T))
 	P := Proto1.NewProto1()
 
-	epA := net.NewMPSTEndpoint(*P, P.A)
+	epA := net.NewMPSTEndpoint(P, P.A)
 	go RunA(P, c, epA)
 
-	epB := net.NewMPSTEndpoint(*P, P.B)
+	epB := net.NewMPSTEndpoint(P, P.B)
 	go RunB(P, c, epB)
 
 	barrier.Wait()
 }
 
 
-func RunA(P *Proto1.Proto1, c *net.GoBinChan, epA *net.MPSTEndpoint) {
+func RunA(P *Proto1.Proto1, c net.BinChan, epA *net.MPSTEndpoint) {
 	log.Println("(A) start")
 	defer barrier.Done()
 
@@ -55,7 +55,7 @@ func RunA(P *Proto1.Proto1, c *net.GoBinChan, epA *net.MPSTEndpoint) {
 }
 
 
-func RunB(P *Proto1.Proto1, c *net.GoBinChan, epB *net.MPSTEndpoint) {
+func RunB(P *Proto1.Proto1, c net.BinChan, epB *net.MPSTEndpoint) {
 	log.Println("(B) start")
 	defer barrier.Done()
 
