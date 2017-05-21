@@ -2,8 +2,15 @@ package main;
 
 
 import "fmt"
-	
 
+type A struct {}
+
+func main() {
+	fmt.Println(A{})
+}
+
+
+/*
 type Role interface {
 	isRole() bool
 }
@@ -25,7 +32,7 @@ func main() {
 	var p P = P{ A: A{}}
 
 	fmt.Println(p.A)	
-}
+}*/
 
 
 /*type ChanState struct{

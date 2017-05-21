@@ -52,11 +52,29 @@ func runProto2B(barrier *sync.WaitGroup, P *Proto2.Proto2, c net.BinChan, epB *n
 
 	defer epB.Close()
 	epB.Accept(P.A, c)
-	b2 := Proto2.NewProto2_B_1(epB)
+	b1 := Proto2.NewProto2_B_1(epB)
 
-	//var x Proto2._Proto2_B_1_Cases
+	var b2 *Proto2.Proto2_B_2
+	switch cases := b1.Branch_A().(type) {
+		case *Proto2.Ok:	
+			log.Println("(B) received Ok")
+			b2 = cases.Recv_A_Ok()
+		case *Proto2.Bye:	
+			log.Println("(B) received Bye")
+			b2 = cases.Recv_A_Bye()
+		default:
+			panic("Shouldn't get in here: ")
+	}
+	switch cases2 := b2.Branch_A().(type) {
+		case *Proto2.Ok_2:
+			log.Println("(B) received Ok")
+			cases2.Recv_A_Ok()
+		case *Proto2.Bye_2:
+			log.Println("(B) received Bye")
+			cases2.Recv_A_Bye()
+	}
 	
-	switch cases := b2.Branch_A().(type) {
+	/*switch cases := b1.Branch_A().(type) {
 		case *Proto2.Ok:	
 			log.Println("(B) received Ok")
 			switch cases2 := cases.Recv_A_Ok().Branch_A().(type) {
@@ -79,7 +97,7 @@ func runProto2B(barrier *sync.WaitGroup, P *Proto2.Proto2, c net.BinChan, epB *n
 			}
 		default:
 			panic("Shouldn't get in here: ")
-	}
+	}*/
 
 	log.Println("(B) done")
 }

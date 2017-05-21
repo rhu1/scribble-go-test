@@ -12,7 +12,7 @@ package main;
 
 
 func main() {
-	//RunProto1()	
-	RunProto2()	
+	RunProto1()	
+	//RunProto2()	
 }
 

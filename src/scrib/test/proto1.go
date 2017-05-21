@@ -22,28 +22,23 @@ func RunProto1() {
 	P := Proto1.NewProto1()
 	c := net.NewGoBinChan(make(chan net.T))
 
-	epA := net.NewMPSTEndpoint(P, P.A)  // FIXME: generate role-specific EP types (no parameterised types)
-	go RunA(barrier, P, c, epA)
-
-	epB := net.NewMPSTEndpoint(P, P.B)
-	go RunB(barrier, P, c, epB)
+	go RunA(barrier, P, c)
+	go RunB(barrier, P, c)
 
 	barrier.Wait()
 }
 
 
 //*
-func RunA(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan, epA *net.MPSTEndpoint) {
+func RunA(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
 	log.Println("(A) start")
 	defer barrier.Done()
 
-	defer epA.Close()
-	epA.Connect(P.B, c)
-	a1 := Proto1.NewProto1_A_1(epA)
+	ep := Proto1.NewEndpointProto1_A(P)
+	ep.A.Connect(P.B, c)	
+	defer ep.A.Close()
 
-	/*b := net.Bar{}
-	f := b.Bar1()
-	log.Println(f)*/
+	a1 := Proto1.NewProto1_A_1(ep)
 
 	var y int
 	a1.Send_B_Ok(1234).Recv_B_PPP()
@@ -51,20 +46,21 @@ func RunA(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan, epA *net.MPS
 
 	log.Println("(A) received from B:", y)
 }
+//*/
 
 
 //*/
-func RunB(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan, epB *net.MPSTEndpoint) {
+func RunB(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
 	log.Println("(B) start")
 	defer barrier.Done()
 
-	defer epB.Close()
-	epB.Accept(P.A, c)
-	b1 := Proto1.NewProto1_B_1(epB)
+	ep := Proto1.NewEndpointProto1_B(P)
+	defer ep.B.Close()
+	ep.B.Accept(P.A, c)	
+
+	b1 := Proto1.NewProto1_B_1(ep)
 
 	var x int
-	//b1.Recv_A_Ok(&x)//.Send_A_Bye(x * 2)
-	
 	switch cases := b1.Branch_A().(type) {
 		case *Proto1.Ok:	
 			cases.Recv_A_Ok(&x).Send_A_PPP()
