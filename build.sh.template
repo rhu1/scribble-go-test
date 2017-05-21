@@ -1,3 +1,6 @@
+# Copy and modify "scribblec" as appropriate
+
+
 #!/bin/sh
 
 scribblec='../scribble-java/bin/scribblec.sh'
