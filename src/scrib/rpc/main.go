@@ -33,8 +33,8 @@ func RunC(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
 	defer barrier.Done()
 
 	ep := Proto1.NewEndpointProto1_C(P)
-	ep.C.Connect(P.S, c)	
 	defer ep.C.Close()
+	ep.C.Connect(P.S, c)	
 
 	c1 := Proto1.NewProto1_C_1(ep)
 
@@ -49,8 +49,8 @@ func RunS(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
 	defer barrier.Done()
 
 	ep := Proto1.NewEndpointProto1_S(P)
-	ep.S.Accept(P.C, c)	
 	defer ep.S.Close()
+	ep.S.Accept(P.C, c)	
 
 	s1 := Proto1.NewProto1_S_1(ep)
 

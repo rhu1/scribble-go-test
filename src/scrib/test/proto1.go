@@ -22,21 +22,21 @@ func RunProto1() {
 	P := Proto1.NewProto1()
 	c := net.NewGoBinChan(make(chan net.T))
 
-	go RunA(barrier, P, c)
-	go RunB(barrier, P, c)
+	go runProto1A(barrier, P, c)
+	go runProto1B(barrier, P, c)
 
 	barrier.Wait()
 }
 
 
 //*
-func RunA(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
+func runProto1A(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
 	log.Println("(A) start")
 	defer barrier.Done()
 
 	ep := Proto1.NewEndpointProto1_A(P)
-	ep.A.Connect(P.B, c)	
 	defer ep.A.Close()
+	ep.A.Connect(P.B, c)	
 
 	a1 := Proto1.NewProto1_A_1(ep)
 
@@ -50,7 +50,7 @@ func RunA(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
 
 
 //*/
-func RunB(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
+func runProto1B(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
 	log.Println("(B) start")
 	defer barrier.Done()
 
