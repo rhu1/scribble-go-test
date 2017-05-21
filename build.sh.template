@@ -1,0 +1,13 @@
+#!/bin/sh
+
+scribblec='../scribble-java/bin/scribblec.sh'
+
+
+"$scribblec" -ip src -d src src/scrib/test/Test.scr -goapi Proto1 A -goapi Proto1 B
+
+"$scribblec" -ip src -d src src/scrib/test/Test.scr -goapi Proto2 A -goapi Proto2 B
+
+"$scribblec" -ip src -d src src/scrib/rpc/RPC.scr -goapi Proto1 C -goapi Proto1 S
+
+"$scribblec" -ip src -d src src/scrib/hello/Hello.scr -goapi Proto1 A -goapi Proto1 B
+
