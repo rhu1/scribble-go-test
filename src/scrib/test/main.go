@@ -36,7 +36,7 @@ func main() {
 	barrier.Wait()
 }
 
-
+// FIXME: errors
 // FIXME: some internal value passing (e.g., roles?) needs to be changed to pointers -- pointer mess in general -- OTOH roles as types may not be useful (cf., ops)
 			// Or make roles by a proper singleton pattern (via checked constructor functions) -- and use them for type-safe generated Endpoint classes
 // FIXME: label constants need to be separated
@@ -72,11 +72,13 @@ func RunB(P Proto1.Proto1, c *net.GoBinChan, epB *net.MPSTEndpoint) {
 	//b1.Recv_A_Ok(&x)//.Send_A_Bye(x * 2)
 	
 	switch cases := b1.Branch_A().(type) {
-		case Proto1.Ok:	
+		case *Proto1.Ok:	
 			cases.Recv_A_Ok(&x)
 			log.Println("B: received from A:", x)
-		case Proto1.Bye:	
+		case *Proto1.Bye:	
 			cases.Recv_A_Bye(&x)
+		default:
+			panic("Shouldn't get in here: ")
 	}
 
 	log.Println("B: received from A:", x)

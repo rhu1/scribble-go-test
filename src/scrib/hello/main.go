@@ -62,21 +62,23 @@ func RunB(P Proto1.Proto1, c *net.GoBinChan, epB *net.MPSTEndpoint) {
 
 	defer epB.Close()
 	epB.Accept(P.A, c)
-	b1 := Proto1.NewProto1_B_1(epB)
+	var b1 *Proto1.Proto1_B_1 = Proto1.NewProto1_B_1(epB)
 
 	var loop = true
 	var x int
 
 	for loop {
 		switch cases := b1.Branch_A().(type) {
-			case Proto1.Ok:
+			case *Proto1.Ok:
 				b1 = cases.Recv_A_Ok(&x)
-				log.Println("B: received from A:", x)
-			case Proto1.Bye:
+				log.Println("(B) received Ok from A:", x)
+			case *Proto1.Bye:
 				cases.Recv_A_Bye(&x)
 				loop = false
+			default:
+				panic("Shouldn't get in here: ")
 		}
 	}
 
-	log.Println("B: received from A:", x)
+	log.Println("(B) received Bye from A:", x)
 }
