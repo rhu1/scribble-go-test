@@ -75,15 +75,19 @@ func (ep *MPSTEndpoint) SetDone() {
 }
 
 func (ep *MPSTEndpoint) Close() error {  // FIXME: should be pointer receiver?
+	var err error
 	for r, c := range ep.Chans {
 		if strings.Compare(ep.Self.GetRoleName(), r.GetRoleName()) < 1 {  // errors?  // FIXME: this hack should only be GoBinChan
-			c.Close()
+			e := c.Close()
+			if e != nil && err == nil {  // FIXME: ?
+				err = e
+			}
 		}
 	}
 	if !ep.done {
 		panic("MPSTEndpoint incomplete")  // FIXME: integrate better with LinearResource -- MPSTEndpoint should be a "LinResManager", that tracks LinRes's within its scope  // FIXME:  EndSocket special case (not LinRes)
 	}
-	return nil  // FIXME: ?
+	return err
 }
 
 func (ep *MPSTEndpoint) GetChan(role Role) BinChan {
