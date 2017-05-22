@@ -19,8 +19,8 @@ func (cs *LinearResource) Use() {
 type T interface {}  // Message types
 
 type BinChan interface {
-	Write(t T)	 // FIXME: error?
-	Read() T
+	Write(t T) error
+	Read() (T, error)
 	Close() error
 }
 
@@ -33,12 +33,13 @@ func NewGoBinChan(c chan T) *GoBinChan {
 	return &GoBinChan { c: c }
 }
 
-func (bc *GoBinChan) Write(t T) {
+func (bc *GoBinChan) Write(t T) error {
 	bc.c <- t	
+	return nil
 }
 
-func (bc *GoBinChan) Read() T {
-	return <-bc.c
+func (bc *GoBinChan) Read() (T, error) {
+	return <-bc.c, nil
 }
 
 func (bc *GoBinChan) Close() error {
@@ -60,6 +61,7 @@ type MPSTEndpoint struct {
 	Chans map[Role]BinChan
 	init bool
 	done bool
+	Err error
 }
 
 func NewMPSTEndpoint(proto P, self Role) *MPSTEndpoint {
@@ -74,7 +76,7 @@ func (ep *MPSTEndpoint) SetDone() {
 	ep.done = true
 }
 
-func (ep *MPSTEndpoint) Close() error {  // FIXME: should be pointer receiver?
+func (ep *MPSTEndpoint) Close() error {  // FIXME: should record error in ep like chan r/w?
 	var err error
 	for r, c := range ep.Chans {
 		if strings.Compare(ep.Self.GetRoleName(), r.GetRoleName()) < 1 {  // errors?  // FIXME: this hack should only be GoBinChan
@@ -90,18 +92,43 @@ func (ep *MPSTEndpoint) Close() error {  // FIXME: should be pointer receiver?
 	return err
 }
 
-func (ep *MPSTEndpoint) GetChan(role Role) BinChan {
+/*func (ep *MPSTEndpoint) GetChan(role Role) BinChan {
 	return ep.Chans[role]
-}
+}*/
 
 func (ep *MPSTEndpoint) Connect(role Role, c BinChan) {   // FIXME: proper client/server connect/accept operations
+	// FIXME: error
 	ep.checkConnectionAction(role)
 	ep.Chans[role] = c  // FIXME: interface types will auto deref the pointer values?
 }
 
 func (ep *MPSTEndpoint) Accept(role Role, c BinChan) {
+	// FIXME: error
 	ep.checkConnectionAction(role)
 	ep.Chans[role] = c
+}
+
+func (ep *MPSTEndpoint) Write(role Role, t T) {
+	if ep.Err != nil {
+		return	
+	}
+	err := ep.Chans[role].Write(t)
+	if err != nil {
+		ep.Err = err	
+	}
+}
+
+func (ep *MPSTEndpoint) Read(role Role) T {
+	if ep.Err != nil {
+		return nil
+	}
+	t, err := ep.Chans[role].Read()
+	if err == nil {
+		return t
+	} else {
+		ep.Err = err	
+		return nil
+	}
 }
 
 func (ep *MPSTEndpoint) checkConnectionAction(role Role) {

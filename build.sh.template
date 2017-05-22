@@ -1,20 +1,30 @@
+#!/bin/sh
+#
 # Copy and modify "scribblec" as appropriate
 
-
-#!/bin/sh
 
 scribblec='scribblec.sh'
 
 
+# Warning: removes *all* go files with the protocol name prefix
+#    (i.e., including non-generated files)
+
+
+rm src/scrib/test/Test/Proto1/Proto1*.go
 "$scribblec" -ip src -d src src/scrib/test/Test.scr -goapi Proto1 A -goapi Proto1 B
 
+rm src/scrib/test/Test/Proto2/Proto2*.go
 "$scribblec" -ip src -d src src/scrib/test/Test.scr -goapi Proto2 A -goapi Proto2 B
 
+rm src/scrib/test/Test/Proto3/Proto3*.go
 "$scribblec" -ip src -d src src/scrib/test/Test.scr -goapi Proto3 A -goapi Proto3 B -goapi Proto3 C
 
+rm src/scrib/rpc/RPC/Proto1/Proto1*.go
 "$scribblec" -ip src -d src src/scrib/rpc/RPC.scr -goapi Proto1 C -goapi Proto1 S
 
+rm src/scrib/hello/Hello/Proto1/Proto1*.go
 "$scribblec" -ip src -d src src/scrib/hello/Hello.scr -goapi Proto1 A -goapi Proto1 B
 
+rm src/scrib/twobuyer/TwoBuyer/TwoBuyer/TwoBuyer*.go
 "$scribblec" -ip src -d src src/scrib/twobuyer/TwoBuyer.scr -goapi TwoBuyer A -goapi TwoBuyer B -goapi TwoBuyer S
 

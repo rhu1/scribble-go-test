@@ -1,5 +1,6 @@
 //$ Raymond@HZHL3 ~/code/scribble-neon/github-rhu1-go/scribble-go-test
-//$ go install scrib/test
+//$ go install scrib/hello
+//$ bin/hello.exe
 
 
 package main;
