@@ -8,8 +8,8 @@ module scrib.twobuyer.TwoBuyer;
 
 type <go> "int" from "..." as int;
 type <go> "string" from "..." as string;
-type <go> "...Address" from "...ava" as Address;
-type <go> "...Date" from "..." as Date;
+type <go> "TwoBuyer.Address" from "scrib/twobuyer/TwoBuyer/TwoBuyer/types.go" as Address;
+type <go> "TwoBuyer.Date" from "scrib/twobuyer/TwoBuyer/TwoBuyer/types.go" as Date;
 
 
 global protocol TwoBuyer(role A, role B, role S)

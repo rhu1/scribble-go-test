@@ -7,7 +7,6 @@ package main;
 
 
 // FIXME: errors
-// FIXME: repeat branch op names at different roles
 
 
 func main() {
