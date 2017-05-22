@@ -71,10 +71,9 @@ func runHelloB(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
 			case *Proto1.Bye:
 				cases.Recv_A_Bye(&x)
 				loop = false
+				log.Println("(B) received Bye from A:", x)
 			default:
 				panic("Shouldn't get in here: ")
 		}
 	}
-
-	log.Println("(B) received Bye from A:", x)
 }
