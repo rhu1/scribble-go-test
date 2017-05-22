@@ -7,8 +7,7 @@ package main;
 
 
 // FIXME: errors
-// FIXME: MPSTEndpoint run-time parameter checks
-// FIXME: Branch switch default panic
+// FIXME: repeat branch op names at different roles
 
 
 func main() {

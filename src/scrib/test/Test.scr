@@ -45,3 +45,34 @@ global protocol Proto2(role A, role B)
 		Bye() from A to B;
 	}
 }
+
+
+global protocol Proto3(role A, role B, role C)
+{
+	choice at A
+	{
+		Ok() from A to B;
+	}
+	or
+	{
+		Bye() from A to B;
+	}
+	choice at B
+	{
+		Ok() from B to A;
+	}
+	or
+	{
+		Bye() from B to A;
+	}
+	choice at B
+	{
+		Ok() from B to A;
+		Ok() from B to C;
+	}
+	or
+	{
+		Bye() from B to A;
+		Bye() from B to C;
+	}
+}
