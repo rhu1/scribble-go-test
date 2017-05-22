@@ -91,8 +91,8 @@ func runTwoBuyerS(barrier *sync.WaitGroup, P *TwoBuyer.TwoBuyer, c_AS net.BinCha
 	switch cases := s1.Recv_A_title(&title).Send_A_quote(quote).Send_B_quote(quote).Branch_B().(type) {
 		case *TwoBuyer.Ok:
 			var addr TwoBuyer.Address
-			cases.Recv_B_Ok(&addr).Send_B_(TwoBuyer.Date{ "date" })
-			log.Println("(S) received Ok from B: " + addr.Addr)
+			cases.Recv_B_Ok(&addr).Send_B_(TwoBuyer.Date{ "my date" })
+			log.Println("(S) received Ok from B: " + addr.Val)
 		case *TwoBuyer.Quit:
 			cases.Recv_B_Quit()
 			log.Println("(S) received Quit from B: ")

@@ -2,10 +2,10 @@ package TwoBuyer
 
 
 type Address struct {
-	Addr string
+	Val string
 }
 
 
 type Date struct {
-	Date string
+	Val string
 }
