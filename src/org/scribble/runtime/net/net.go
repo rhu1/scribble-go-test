@@ -6,11 +6,14 @@ import "strings"
 
 type LinearResource struct {
 	used bool
+	//fail bool
 }
 
 func (cs *LinearResource) Use() {
 	if cs.used {
+		//cs.fail = true
 		panic("Linear resource already used.")  // FIXME: panic seems non-deterministic?
+		//log.Fatal("Linear resource already used.")
 	}
 	cs.used = true;
 }
@@ -97,20 +100,25 @@ func (ep *MPSTEndpoint) Close() error {  // FIXME: should record error in ep lik
 }*/
 
 func (ep *MPSTEndpoint) Connect(role Role, c BinChan) {   // FIXME: proper client/server connect/accept operations
-	// FIXME: error
+	if ep.Err != nil {
+		panic(ep.Err)
+	}
 	ep.checkConnectionAction(role)
 	ep.Chans[role] = c  // FIXME: interface types will auto deref the pointer values?
 }
 
 func (ep *MPSTEndpoint) Accept(role Role, c BinChan) {
-	// FIXME: error
+	if ep.Err != nil {
+		panic(ep.Err)
+	}
 	ep.checkConnectionAction(role)
 	ep.Chans[role] = c
 }
 
 func (ep *MPSTEndpoint) Write(role Role, t T) {
 	if ep.Err != nil {
-		return	
+		//return
+		panic(ep.Err)
 	}
 	err := ep.Chans[role].Write(t)
 	if err != nil {
@@ -120,7 +128,8 @@ func (ep *MPSTEndpoint) Write(role Role, t T) {
 
 func (ep *MPSTEndpoint) Read(role Role) T {
 	if ep.Err != nil {
-		return nil
+		//return nil
+		panic(ep.Err)
 	}
 	t, err := ep.Chans[role].Read()
 	if err == nil {

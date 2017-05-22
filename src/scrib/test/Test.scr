@@ -10,18 +10,21 @@ module scrib.test.Test;  // Use scrib prefix to separate from general go package
 
 
 type <go> "int" from "..." as int;
+type <go> "string" from "..." as string;
 
 
 global protocol Proto1(role A, role B)
 {
 	choice at A
 	{
-		Ok(int) from A to B;
-		PPP() from B to A;
+		M1(int) from A to B;
+		M1(int) from B to A;
+		do Proto1(A, B);
 	}
 	or
 	{
-		Bye(int) from A to B;
+		M2(string) from A to B;
+		M2(string) from B to A;
 	}
 }
 
