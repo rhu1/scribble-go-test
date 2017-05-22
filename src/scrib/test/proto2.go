@@ -67,10 +67,10 @@ func runProto2B(barrier *sync.WaitGroup, P *Proto2.Proto2, c net.BinChan) {
 			panic("Shouldn't get in here: ")
 	}
 	switch cases2 := b2.Branch_A().(type) {
-		case *Proto2.Ok_2:
+		case *Proto2.Ok_B_2:
 			log.Println("(B) received Ok")
 			cases2.Recv_A_Ok()
-		case *Proto2.Bye_2:
+		case *Proto2.Bye_B_2:
 			log.Println("(B) received Bye")
 			cases2.Recv_A_Bye()
 		default:
