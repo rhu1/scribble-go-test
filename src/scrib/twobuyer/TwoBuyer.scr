@@ -1,0 +1,30 @@
+//Raymond@HZHL3 ~/code/scribble-neon/github-rhu1-go/scribble-go-test
+//$ ../scribble-java/bin/scribblec.sh -ip src -d src src/scrib/twobuyer/TwoBuyer.scr -goapi TwoBuyer A
+//$ go install scrib/twobuyer
+
+
+module scrib.twobuyer.TwoBuyer;
+
+
+type <go> "int" from "..." as int;
+type <go> "string" from "..." as string;
+type <go> "...Address" from "...ava" as Address;
+type <go> "...Date" from "..." as Date;
+
+
+global protocol TwoBuyer(role A, role B, role S)
+{
+  title(string) from A to S;
+  quote(int) from S to A;
+  quote(int) from S to B;
+  quoteByTwo(int) from A to B;
+  choice at B
+  {
+    ok(Address) from B to S;
+    (Date) from S to B;
+  }
+  or
+  {
+    quit() from B to S;
+  }
+}
