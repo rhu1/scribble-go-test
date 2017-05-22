@@ -20,11 +20,11 @@ global protocol TwoBuyer(role A, role B, role S)
   quoteByTwo(int) from A to B;
   choice at B
   {
-    ok(Address) from B to S;
+    Ok(Address) from B to S;
     (Date) from S to B;
   }
   or
   {
-    quit() from B to S;
+    Quit() from B to S;
   }
 }

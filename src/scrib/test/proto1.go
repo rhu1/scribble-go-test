@@ -22,8 +22,8 @@ func RunProto1() {
 	P := Proto1.NewProto1()
 	c := net.NewGoBinChan(make(chan net.T))
 
-	go runProto1A(barrier, P, c)
 	go runProto1B(barrier, P, c)
+	go runProto1A(barrier, P, c)
 
 	barrier.Wait()
 }

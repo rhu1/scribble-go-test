@@ -2,7 +2,11 @@
 .settings/
 bin/
 pkg/
-src/scrib/rpc/RPC/
+
+build.sh
+
 src/scrib/test/Test/
+src/scrib/rpc/RPC/
 src/scrib/hello/Hello/
+src/scrib/twobuyer/TwoBuyer/
    

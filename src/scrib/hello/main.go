@@ -22,14 +22,14 @@ func main() {
 	c := net.NewGoBinChan(make(chan net.T))
 	P := Proto1.NewProto1()
 
-	go RunA(barrier, P, c)
-	go RunB(barrier, P, c)
+	go runHelloB(barrier, P, c)
+	go runHelloA(barrier, P, c)
 
 	barrier.Wait()
 }
 
 
-func RunA(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
+func runHelloA(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
 	log.Println("(A) start")
 	defer barrier.Done()
 
@@ -46,11 +46,11 @@ func RunA(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
 	}
 	a1.Send_B_Bye(y)
 
-	//log.Println("A: received from B:", y)
+	//log.Println("(A) received from B:", y)
 }
 
 
-func RunB(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
+func runHelloB(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
 	log.Println("(B) start")
 	defer barrier.Done()
 

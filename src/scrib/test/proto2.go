@@ -22,8 +22,8 @@ func RunProto2() {
 	P := Proto2.NewProto2()
 	c := net.NewGoBinChan(make(chan net.T))
 
-	go runProto2A(barrier, P, c)
 	go runProto2B(barrier, P, c)
+	go runProto2A(barrier, P, c)
 
 	barrier.Wait()
 }
@@ -73,6 +73,8 @@ func runProto2B(barrier *sync.WaitGroup, P *Proto2.Proto2, c net.BinChan) {
 		case *Proto2.Bye_2:
 			log.Println("(B) received Bye")
 			cases2.Recv_A_Bye()
+		default:
+			panic("Shouldn't get in here: ")
 	}
 	
 	/*switch cases := b1.Branch_A().(type) {

@@ -22,13 +22,13 @@ func main() {
 	c := net.NewGoBinChan(make(chan net.T))
 	P := Proto1.NewProto1()
 
-	go RunC(barrier, P, c)
-	go RunS(barrier, P, c)
+	go runRpcS(barrier, P, c)
+	go runRpcC(barrier, P, c)
 
 	barrier.Wait()
 }
 
-func RunC(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
+func runRpcC(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
 	log.Println("(C) start")
 	defer barrier.Done()
 
@@ -44,7 +44,7 @@ func RunC(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
 	log.Println("(C) received from S:", y)
 }
 
-func RunS(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
+func runRpcS(barrier *sync.WaitGroup, P *Proto1.Proto1, c net.BinChan) {
 	log.Println("(S) start")
 	defer barrier.Done()
 
