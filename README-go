@@ -1,6 +1,8 @@
 This is a README for setting up and running the Scribble-Go tool.
 
-Scribble is a toolchain for validating protocols based on multiparty session types, and generating APIs for implementing the endpoints.  Scribble-Go is a version of Scribble that supports API generation for the Go language.
+Scribble is a toolchain for validating protocols based on multiparty session
+types, and generating APIs for implementing the endpoints.  Scribble-Go is a
+version of Scribble that supports API generation for the Go language.
 
 
 Scribble-Go preliminaries
@@ -10,17 +12,17 @@ Scribble-Go preliminaries
 
 The version of Scribble needed for Scribble-Go is located here:
 
-  https://github.com/rhu1/scribble-java/tree/rhu1-statetypegen
+	https://github.com/rhu1/scribble-java/tree/rhu1-statetypegen
 
 N.B. a different repository may be used in the future.
 
 Instructions on building Scribble can be found here:
 
-  https://www.doc.ic.ac.uk/~rhu/scribble/tutorial/#SCRIBBUILD
+	https://www.doc.ic.ac.uk/~rhu/scribble/tutorial/#SCRIBBUILD
 
-This will produce a zip inside the scribble-dist Maven project:
+This will produce a zip inside the scribble-java Git directory:
 
-  dist/target/scribble-dist-0.4-SNAPSHOT.zip
+	dist/target/scribble-dist-0.4-SNAPSHOT.zip
 
 Scribble is ready to run by simply extracting the contents of the zip.
 
@@ -29,19 +31,22 @@ Scribble is ready to run by simply extracting the contents of the zip.
 
 Additional Go packages needed to use Scribble-Go are located here:
 
-  https://github.com/rhu1/scribble-go-test.git
+	https://github.com/rhu1/scribble-go-test.git
 
 The repository can be cloned using Git.
 
-N.B. a different repository will be used in the future; the packages will also be renamed.
+N.B. a different repository will be used in the future; the packages will also
+be renamed.
 
 
 Setting up the Scribble-Go tool
 ---
 
-This README assumes Go is installed.  The following instructions are just for example; other setups are possible.
+This README assumes Go is installed.  The following instructions are just for
+example; other setups are possible.
 
-(3) Add the scribble-go-test Git directory from (2) to the GOPATH environment variable.
+(3) Add the scribble-go-test Git directory from (2) to the GOPATH environment
+variable.
 
 (4) Extract the contents of the zip from (1) into the same directory.
 
@@ -49,20 +54,25 @@ This README assumes Go is installed.  The following instructions are just for ex
 Example tool usage
 ---
 
-The following instructions assume the scribble-go-test Git directory is the current directory in a terminal.  The instructions are given for a Hello World Scribble example included in the scribble-go-test repository from (2):
+The following instructions assume the scribble-go-test Git directory is the
+current directory in a terminal.  The instructions are given for a Hello World
+Scribble example included in the scribble-go-test repository from (2):
 
-  https://github.com/rhu1/scribble-go-test/blob/master/src/scrib/hello/Hello.scr
+	https://github.com/rhu1/scribble-go-test/blob/master/src/scrib/hello/Hello.scr
 
-(5) Use the scribblec.sh script from (4) to generate Go APIs for implementing the endpoints of the Hello protocol:
+(5) Use the scribblec.sh script from (4) to generate Go APIs for implementing
+the endpoints of the Hello protocol:
 
-  ./scribblec.sh -ip src -d src src/scrib/hello/Hello.scr -goapi
-	Hello A -goapi Hello B
+	./scribblec.sh -ip src -d src src/scrib/hello/Hello.scr -goapi Hello A
+	    -goapi Hello B
 
-The arguments to the above command generate the APIs for both the A and B roles; these APIs can also be separately generated.
+The arguments to the above command generate the APIs for both the A and B
+roles; these APIs can also be separately generated.
 
-(6) [Standard Go usage]  Compile the example Go program implementing the Hello endpoints:
+(6) [Standard Go usage]  Compile the example Go program implementing the Hello
+endpoints:
 
-  go install scrib/hello
+	go install scrib/hello
 
 (7) [Standard Go usage]  Run the Hello program:
 
