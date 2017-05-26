@@ -55,8 +55,8 @@ Example tool usage
 ---
 
 The following instructions assume the scribble-go-test Git directory is the
-current directory in a terminal.  The instructions are given for a Hello World
-Scribble example included in the scribble-go-test repository from (2):
+current directory in a terminal.  The instructions are given for a Scribble
+Hello World example included in the scribble-go-test repository from (2):
 
 	https://github.com/rhu1/scribble-go-test/blob/master/src/scrib/hello/
 
