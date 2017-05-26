@@ -58,10 +58,10 @@ The following instructions assume the scribble-go-test Git directory is the
 current directory in a terminal.  The instructions are given for a Hello World
 Scribble example included in the scribble-go-test repository from (2):
 
-	https://github.com/rhu1/scribble-go-test/blob/master/src/scrib/hello/Hello.scr
+	https://github.com/rhu1/scribble-go-test/blob/master/src/scrib/hello/
 
 (5) Use the scribblec.sh script from (4) to generate Go APIs for implementing
-the endpoints of the Hello protocol:
+the endpoints of the Hello protocol in Hello.scr:
 
 	./scribblec.sh -ip src -d src src/scrib/hello/Hello.scr -goapi Hello A
 	    -goapi Hello B
@@ -69,8 +69,8 @@ the endpoints of the Hello protocol:
 The arguments to the above command generate the APIs for both the A and B
 roles; these APIs can also be separately generated.
 
-(6) [Standard Go usage]  Compile the example Go program implementing the Hello
-endpoints:
+(6) [Standard Go usage]  Compile the example main.go program (included in the
+scribble-go-test repository) implementing the Hello endpoints:
 
 	go install scrib/hello
 
