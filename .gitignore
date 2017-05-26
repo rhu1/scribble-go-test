@@ -3,6 +3,9 @@
 bin/
 pkg/
 
+libs/
+scribblec.sh
+
 build.sh
 
 src/scrib/test/Test/
