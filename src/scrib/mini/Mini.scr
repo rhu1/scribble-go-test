@@ -1,0 +1,19 @@
+//Raymond@HZHL3 ~/code/scribble-neon/github-rhu1-go/scribble-go-test
+//$ ../scribble-java/bin/scribblec.sh -ip src -d src src/scrib/mini/Mini.scr -goapi Proto1 A 
+//$ go install scrib/mini
+
+
+//http://sandbox.kidstrythisathome.com/erdos/
+
+
+module scrib.mini.Mini;  // Use scrib prefix to separate from general go packages
+
+
+type <go> "string" from "..." as string;
+
+
+global protocol Proto1(role A, role B)
+{
+	a(string) from A to B;
+	b(string) from B to A;
+}
