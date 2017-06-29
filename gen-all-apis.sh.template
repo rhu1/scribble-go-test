@@ -1,9 +1,10 @@
 #!/bin/sh
 #
-# Copy and modify "scribblec" as appropriate
+# Copy and modify "scribblec" for Scribble-Go as appropriate:
+#  the script should run  org.scribble.ext.go.cli.GoCommandLine
 
 
-scribblec='scribblec.sh'
+scribblec='scribblec-go.sh'
 
 
 # Warning: removes *all* go files with the protocol name prefix

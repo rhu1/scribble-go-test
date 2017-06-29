@@ -6,10 +6,11 @@ pkg/
 libs/
 scribblec.sh
 
-build.sh
+gen-all-apis.sh
 
 src/scrib/test/Test/
 src/scrib/rpc/RPC/
 src/scrib/hello/Hello/
 src/scrib/twobuyer/TwoBuyer/
+src/scrib/mini/Mini/
    

@@ -1,5 +1,5 @@
 //Raymond@HZHL3 ~/code/scribble-neon/github-rhu1-go/scribble-go-test
-//$ ../scribble-java/bin/scribblec.sh -ip src -d src src/scrib/mini/Mini.scr -goapi Proto1 A 
+//$ ../scribble-java/bin/scribblec-go.sh -ip src -d src src/scrib/mini/Mini.scr -goapi Proto1 A 
 //$ go install scrib/mini
 
 
